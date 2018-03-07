@@ -1,6 +1,7 @@
 import React from 'react';
 import styles from './styles.scss';
 import CSSModules from 'react-css-modules';
+import Prism from './Prism';
 
 export type Props = {}
 
@@ -10,8 +11,11 @@ class Home extends React.Component<OwnProps & Props> {
 
     render() {
         return (
-            <div styleName="container">
-              Hello
+            <div styleName="wrapper">
+              <Prism />
+              <Prism />
+              <Prism />
+              <Prism />
             </div>
         );
     }
