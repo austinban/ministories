@@ -1,0 +1,18 @@
+@keyframes bounceIn {
+  from {transform: scale(1.4);}
+  to {transform: scale(1);}
+}
+
+.container {
+	display: block;
+	animation: bounceIn .5s;
+	animation-timing-function: bezier-curve(.68,-0.37,.34,1.32);
+}
+
+.main-title{
+	font-size: 48px;
+}
+
+.body{
+	font-size: 24px;
+}
