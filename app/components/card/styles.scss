@@ -1,0 +1,27 @@
+@import '../../routes/layout/colors';
+
+.container {
+	display: inline-flex;
+  flex-direction: column;
+  margin: 16px;
+  background: $off-white;
+  padding: 16px;
+  border-radius: 6px;
+  animation: dropIn .3s;
+  animation-timing-function: cubic-bezier(.4,.01,.25,1.25);
+	width: calc(100% - 64px);
+}
+
+@keyframes dropIn {
+from{transform: scale(1.1);}
+to{transform: scale(1);}
+}
+
+
+.main-title{
+	font-size: 48px;
+}
+
+.body{
+	font-size: 24px;
+}

@@ -1,30 +1,44 @@
 import React from 'react';
 import styles from './styles.scss';
 import CSSModules from 'react-css-modules';
-import firebase from '../../components/firebase/Firebase';
+import classNames from 'classnames';
+import firebase, { auth, provider } from '../../components/firebase/Firebase';
+import Card from '../../components/card/Card';
+
 export type Props = {}
 
 export type OwnProps = {}
 
 export type State = {
-  currentItem: string,
-  username: string,
-  items: Array<string>
+  body: string,
+  author: string,
+  items: Array<string>,
+  formOpen: boolean
 }
 
 class Home extends React.Component<OwnProps & Props, State> {
     constructor() {
         super();
         this.state = {
-            currentItem: '',
-            username: '',
-            items: []
+            body: '',
+            author: '',
+            items: [],
+            formOpen: false,
+            user: null
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.login = this.login.bind(this);
+        this.logout = this.logout.bind(this);
     }
 
     componentDidMount() {
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                this.setState({ user });
+            }
+        });
+
         const itemsRef = firebase.database().ref('items');
         itemsRef.on('value', (snapshot) => {
             const items = snapshot.val();
@@ -33,8 +47,8 @@ class Home extends React.Component<OwnProps & Props, State> {
                 if(item) {
                     newState.push({
                         id: item,
-                        title: items[item].title,
-                        user: items[item].user
+                        author: items[item].author,
+                        body: items[item].body
                     });
                 }
             }
@@ -54,50 +68,74 @@ class Home extends React.Component<OwnProps & Props, State> {
         e.preventDefault();
         const itemsRef = firebase.database().ref('items');
         const item = {
-            title: this.state.currentItem,
-            user: this.state.username
+            author: this.state.user.displayName || this.state.user.email,
+            body: this.state.author
         };
         itemsRef.push(item);
         this.setState({
-            currentItem: '',
-            username: ''
+            body: '',
+            author: ''
         });
     }
 
-    removeItem(itemId) {
-        const itemRef = firebase.database().ref(`/items/${itemId}`);
-        itemRef.remove();
+    logout() {
+        auth.signOut()
+          .then(() => {
+              this.setState({
+                  user: null
+              });
+          });
+    }
+
+    login() {
+        auth.signInWithPopup(provider)
+          .then((result) => {
+              this.setState({
+                  result
+              });
+          });
+    }
+
+    toggleForm() {
+        this.setState({formOpen: !this.state.formOpen});
+    }
+
+    renderForm() {
+        const popupClasses = classNames('popup-wrapper', this.state.formOpen ? '' : 'hidden');
+        return(
+            <div styleName={popupClasses}>
+              <div styleName="popup">
+                <div styleName="close-icon" onClick={() => this.toggleForm()}>X</div>
+                <form styleName="form" onSubmit={this.handleSubmit}>
+                  <textarea styleName="input" type="text" name="author" placeholder="What's your name?" onChange={this.handleChange} value={this.state.author} />
+                  <textarea styleName="input" type="text" name="body" placeholder="What are you grateful for?" onChange={this.handleChange} value={this.state.body} />
+                  <button onClick={() => this.toggleForm()}>Add Item</button>
+                </form>
+              </div>
+            </div>
+        );
     }
 
     render() {
         return (
             <div styleName="wrapper">
-              <div styleName="book-binder">
-                <div>
-                  <section>
-                      <form onSubmit={this.handleSubmit}>
-                        <input type="text" name="username" placeholder="What's your name?" onChange={this.handleChange} value={this.state.username} />
-                        <input type="text" name="currentItem" placeholder="What are you bringing?" onChange={this.handleChange} value={this.state.currentItem} />
-                        <button>Add Item</button>
-                      </form>
-                  </section>
-                  <section>
-                    <div>
-                      <ul>
-                        {this.state.items.map((item) => {
-                            return (
-                              <li key={item.id}>
-                                <h3>{item.title}</h3>
-                                <p>brought by: {item.user}</p>
-                                <button onClick={() => this.removeItem(item.id)}>Remove Item</button>
-                              </li>
-                            );
-                        })}
-                      </ul>
-                    </div>
-                  </section>
-                </div>
+              {this.state.user ? <img styleName="profileImg" src={this.state.user.photoURL} />
+              :
+              <div>You must be logged in to see everything you dingus</div>}
+              {this.state.user ?
+                <button onClick={this.logout}>Log Out</button>
+                :
+                <button onClick={this.login}>Log In</button>
+              }
+              <div styleName="button" onClick={() => this.toggleForm()}>Submit Answer</div>
+              <div styleName="cards">
+                {this.state.items.map((item) => {
+                    return (
+                      <Card key={item.id} item={item} />
+                    );
+                })}
               </div>
+              { this.renderForm() }
             </div>
         );
     }

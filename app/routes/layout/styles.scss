@@ -1,15 +1,14 @@
 @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:regular,bold,italic&subset=latin,latin-ext');
+@import './colors';
 
 body{
 	margin: 0;
 	font-family: 'Source Sans Pro', sans-serif;
+	background: $grey;
 }
 
 .container{
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	flex-direction: column;
+	display: block;
 }
 
 .nav {
