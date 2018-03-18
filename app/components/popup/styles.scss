@@ -1,0 +1,105 @@
+@import '../../routes/layout/colors';
+
+.popup-wrapper{
+	z-index: 1000;
+	display: flex;
+	position: fixed;
+	left: 0;
+	top: 0;
+	width: 100vw;
+	height: 100vh;
+	justify-content: center;
+	align-items: center;
+	background: rgba(0,0,0,.4);
+	animation: fadeIn .3s;
+	animation-timing-function: ease-out;
+}
+
+@keyframes fadeIn {
+	from{opacity: 0;}
+	to{opacity: 1;}
+}
+
+.popup{
+	width: 600px;
+	max-width: 100%;
+	position: relative;
+	background: $light-yellow;
+	padding: 32px;
+	border-radius: 6px;
+	animation: dropIn .4s;
+	animation-timing-function: cubic-bezier(.4,.01,.25,1.25);
+}
+
+@keyframes dropIn {
+	from{
+		transform: scale(1.2);
+	}
+	to{
+		transform: scale(1);
+	}
+}
+
+.popup-header{
+	color: $grey;
+}
+
+.hidden{
+	display: none;
+}
+
+.close-icon{
+	position: absolute;
+	right: 12px;
+	top: 12px;
+	cursor: pointer;
+	font-weight: 700;
+}
+
+.form{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+
+.input{
+	font-size: 16px;
+	padding: 8px;
+	border-radius: 6px;
+	border: 0 solid #fff;
+	margin-bottom: 16px;
+	width: 100%;
+	min-height: 182px;
+	&:focus{
+		outline: none;
+	}
+}
+
+.red{
+	color: red;
+}
+
+.button-grey{
+	display: inline-block;
+	padding: 8px 12px;
+	border: 1px solid $grey;
+	color: $grey;
+	border-radius: 200px;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+	font-size: 12px;
+	margin: 8px 16px 8px 0;
+	cursor: pointer;
+	transition: all .1s;
+	background: transparent;
+	&:hover{
+		background: $grey;
+		color: $light-yellow;
+	}
+}
+
+.submit{
+	display: block;
+	padding: 16px;
+}

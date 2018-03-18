@@ -1,9 +1,9 @@
 import React from 'react';
 import styles from './styles.scss';
 import CSSModules from 'react-css-modules';
-import classNames from 'classnames';
-import firebase, { auth, provider } from '../../components/firebase/Firebase';
+import firebase, { auth } from '../../components/firebase/Firebase';
 import Card from '../../components/card/Card';
+import Nav from '../../components/nav/Nav';
 
 export type Props = {}
 
@@ -20,16 +20,9 @@ class Home extends React.Component<OwnProps & Props, State> {
     constructor() {
         super();
         this.state = {
-            body: '',
-            author: '',
             items: [],
-            formOpen: false,
             user: null
         };
-        this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-        this.login = this.login.bind(this);
-        this.logout = this.logout.bind(this);
     }
 
     componentDidMount() {
@@ -47,95 +40,65 @@ class Home extends React.Component<OwnProps & Props, State> {
                 if(item) {
                     newState.push({
                         id: item,
-                        author: items[item].author,
-                        body: items[item].body
+                        author: {
+                            id: items[item].author.id,
+                            name: items[item].author.name,
+                        },
+                        body: items[item].body,
+                        prompt: items[item].prompt,
+                        date: items[item].date,
+                        likes: {
+                            count: items[item].likes.count,
+                            users: items[item].likes.users
+                        }
                     });
                 }
             }
             this.setState({
-                items: newState
+                items: newState.reverse()
             });
         });
     }
 
-    handleChange(e) {
-        this.setState({
-            [e.target.name]: e.target.value
-        });
+    componentDidUpdate(prevProps, prevState) {
+        if(prevState.user !== this.state.user) {
+            // console.log('updates')
+        }
     }
 
-    handleSubmit(e) {
-        e.preventDefault();
-        const itemsRef = firebase.database().ref('items');
-        const item = {
-            author: this.state.user.displayName || this.state.user.email,
-            body: this.state.author
-        };
-        itemsRef.push(item);
-        this.setState({
-            body: '',
-            author: ''
-        });
-    }
-
-    logout() {
-        auth.signOut()
-          .then(() => {
-              this.setState({
-                  user: null
-              });
-          });
-    }
-
-    login() {
-        auth.signInWithPopup(provider)
-          .then((result) => {
-              this.setState({
-                  result
-              });
-          });
-    }
-
-    toggleForm() {
-        this.setState({formOpen: !this.state.formOpen});
-    }
-
-    renderForm() {
-        const popupClasses = classNames('popup-wrapper', this.state.formOpen ? '' : 'hidden');
+    renderCards() {
+        const { user, items } = this.state;
+        const verifiedItems = user ? items : items.slice(0, 12);
         return(
-            <div styleName={popupClasses}>
-              <div styleName="popup">
-                <div styleName="close-icon" onClick={() => this.toggleForm()}>X</div>
-                <form styleName="form" onSubmit={this.handleSubmit}>
-                  <textarea styleName="input" type="text" name="author" placeholder="What's your name?" onChange={this.handleChange} value={this.state.author} />
-                  <textarea styleName="input" type="text" name="body" placeholder="What are you grateful for?" onChange={this.handleChange} value={this.state.body} />
-                  <button onClick={() => this.toggleForm()}>Add Item</button>
-                </form>
-              </div>
+          <div>
+            <div styleName="cards">
+              {verifiedItems.map((item) => {
+                  return (
+                    <Card key={item.id} item={item} user={user} />
+                  );
+              })}
             </div>
+            { this.renderLoginMessage() }
+          </div>
         );
     }
 
+    renderLoginMessage() {
+        const { user } = this.state;
+
+        if(!user) {
+            return(
+              <div styleName="prompt">Log in to view more or tell your own story</div>
+            );
+        }return null;
+    }
+
     render() {
+        const { user } = this.state;
         return (
             <div styleName="wrapper">
-              {this.state.user ? <img styleName="profileImg" src={this.state.user.photoURL} />
-              :
-              <div>You must be logged in to see everything you dingus</div>}
-              {this.state.user ?
-                <button onClick={this.logout}>Log Out</button>
-                :
-                <button onClick={this.login}>Log In</button>
-              }
-              <div styleName="button" onClick={() => this.toggleForm()}>Submit Answer</div>
-              <div styleName="cards">
-                {this.state.items.map((item) => {
-                    return (
-                      <Card key={item.id} item={item} />
-                    );
-                })}
-              </div>
-              { this.renderForm() }
+              { <Nav user={user} /> }
+              { this.renderCards() }
             </div>
         );
     }

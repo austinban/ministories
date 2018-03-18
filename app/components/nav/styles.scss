@@ -1,0 +1,28 @@
+@import '../../routes/layout/colors';
+
+.container {
+	padding: 16px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.logo{
+	text-transform: uppercase;
+	color: $light-yellow;
+	margin: 0;
+	letter-spacing: 2px;
+}
+
+.options{
+	display: flex;
+	align-items: center;
+}
+
+.profileImg{
+	display: inline-block;
+	object-fit: cover;
+	width: 36px;
+	height: 36px;
+	border-radius: 50%;
+}
