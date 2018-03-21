@@ -10,9 +10,9 @@
   animation: dropIn .3s;
   animation-timing-function: cubic-bezier(.4,.01,.25,1.25);
 	width: calc(100% - 64px);
-	border: 1px solid $off-white;
-	color: $off-white;
-	background: $grey;
+	border: 1px solid $grey;
+	color: $grey;
+	background: $off-white;
 }
 
 @keyframes dropIn {
@@ -21,7 +21,7 @@
 }
 
 .prompt{
-	color: $off-white;
+	color: $grey;
 	font-size: 20px;
 }
 
@@ -39,7 +39,7 @@
 	position: absolute;
 	top: 12px;
 	right: 12px;
-	color: $light-yellow;
+	color: $light-primary;
 	cursor: pointer;
 	font-weight: 700;
 }
@@ -48,7 +48,11 @@
 	position: absolute;
 	bottom: 12px;
 	right: 12px;
-	color: $light-yellow;
-	cursor: pointer;
+	color: $light-primary;
+	cursor: url("https://s3.amazonaws.com/ministoriessite/like.png") 12 12, pointer;
 	font-weight: 700;
+	&.liked{
+		color: $highlight;
+		cursor: default;
+	}
 }

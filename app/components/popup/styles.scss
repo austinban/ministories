@@ -24,7 +24,7 @@
 	width: 600px;
 	max-width: 100%;
 	position: relative;
-	background: $light-yellow;
+	background: $light-primary;
 	padding: 32px;
 	border-radius: 6px;
 	animation: dropIn .4s;
@@ -95,7 +95,7 @@
 	background: transparent;
 	&:hover{
 		background: $grey;
-		color: $light-yellow;
+		color: $light-primary;
 	}
 }
 

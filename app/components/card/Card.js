@@ -3,6 +3,7 @@ import styles from './styles.scss';
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import firebase from '../firebase/Firebase';
+import classNames from 'classnames';
 
 class Card extends React.Component<> {
     static propTypes = {
@@ -35,6 +36,11 @@ class Card extends React.Component<> {
         }
     }
 
+    hasLikedStory() {
+        const { item, user } = this.props;
+        return item.likes.users && Object.values(item.likes.users).includes(user.uid);
+    }
+
     // Render Partials
     renderRemoveButton() {
         const { item, user } = this.props;
@@ -48,8 +54,9 @@ class Card extends React.Component<> {
 
     renderLikes() {
         const { item } = this.props;
+        const likeStyles = classNames('like', this.hasLikedStory() ? 'liked' : '');
         return(
-            <div styleName="like" onClick={() => this.likeStory(item)}>{item.likes.count >= 0 ? item.likes.count : 0}</div>
+            <div styleName={likeStyles} onClick={() => this.likeStory(item)}>{item.likes.count >= 0 ? item.likes.count : 0}</div>
         );
     }
 

@@ -3,8 +3,8 @@
 .container{
 	display: inline-block;
 	padding: 8px 12px;
-	border: 1px solid $light-yellow;
-	color: $light-yellow;
+	border: 1px solid $light-primary;
+	color: $light-primary;
 	border-radius: 200px;
 	text-transform: uppercase;
 	letter-spacing: 1px;
@@ -14,19 +14,19 @@
 	transition: all .1s;
 	background: transparent;
 	&:hover{
-		background: $light-yellow;
-		color: $grey;
+		background: $light-primary;
+		color: $off-white;
 	}
 	&.grey{
 		border-color: $grey;
 		color: $grey;
 		&:hover{
 			background: $grey;
-			color: $light-yellow;
+			color: $light-primary;
 		}
 		&.disabled{
 			background: $grey;
-			color: $light-yellow;
+			color: $light-primary;
 			opacity: .5;
 			pointer-events: none;
 		}

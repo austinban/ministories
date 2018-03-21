@@ -67,6 +67,7 @@ class Home extends React.Component<OwnProps & Props, State> {
         }
     }
 
+    // Render partials
     renderCards() {
         const { user, items } = this.state;
         const verifiedItems = user ? items : items.slice(0, 12);
@@ -94,6 +95,7 @@ class Home extends React.Component<OwnProps & Props, State> {
         }return null;
     }
 
+    // Render
     render() {
         const { user } = this.state;
         return (
