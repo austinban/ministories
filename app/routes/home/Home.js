@@ -25,6 +25,7 @@ class Home extends React.Component<OwnProps & Props, State> {
         };
     }
 
+    // React lifcycle
     componentDidMount() {
         auth.onAuthStateChanged((user) => {
             if (user) {
