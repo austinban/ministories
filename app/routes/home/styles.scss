@@ -4,7 +4,45 @@
 	display: block;
 }
 
+.banner{
+	background: $light-primary; /* Old browsers */
+	background: -moz-linear-gradient(45deg, $dark-primary 0%, $light-primary 100%); /* FF3.6-15 */
+	background: -webkit-linear-gradient(45deg, $dark-primary 0%,$light-primary 100%); /* Chrome10-25,Safari5.1-6 */
+	background: linear-gradient(135deg, $dark-primary 0%,$light-primary 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='$dark-primary', endColorstr='$light-primary',GradientType=0 ); /* IE6-9 */
+	padding: 64px 16px;
+	box-shadow: 3px 4px 4px rgba(0,0,0,.1);
+}
+
+.banner-text{
+	font-size: 64px;
+	text-transform: uppercase;
+	font-weight: 700;
+	color: $off-white;
+	margin: 0;
+	animation: fadeDown 1.5s;
+}
+
+.banner-subtext{
+	font-size: 16px;
+	color: $off-white;
+	margin: 0;
+	animation: fadeDown 1s;
+}
+
+@keyframes fadeDown {
+	from{
+		opacity: 0;
+		transform: translateY(-50%);
+	}
+	to{
+		opacity: 1;
+		transform: translateY(0%);
+	}
+}
+
 .cards{
+	padding: 16px 0;
 	column-count: 1;
 	@media(min-width: 600px){
 		column-count: 2;

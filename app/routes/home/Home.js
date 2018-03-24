@@ -4,6 +4,7 @@ import CSSModules from 'react-css-modules';
 import firebase, { auth } from '../../components/firebase/Firebase';
 import Card from '../../components/card/Card';
 import Nav from '../../components/nav/Nav';
+import Loader from '../../components/loader/Loader';
 
 export type Props = {}
 
@@ -68,21 +69,40 @@ class Home extends React.Component<OwnProps & Props, State> {
     }
 
     // Render partials
+    renderBanner() {
+        const { user } = this.state;
+        if(user) {
+            return(
+              <div styleName="banner">
+                <h1 styleName="banner-text">Welcome back, {user.displayName}!</h1>
+                <p styleName="banner-subtext">I'm so glad you're here! </p>
+              </div>
+            );
+        }return(
+          <div styleName="banner">
+            <h1 styleName="banner-text">Bite-size stories told everyday</h1>
+            <p styleName="banner-subtext">This is the subtext</p>
+          </div>
+        );
+    }
+
     renderCards() {
         const { user, items } = this.state;
         const verifiedItems = user ? items : items.slice(0, 12);
-        return(
-          <div>
-            <div styleName="cards">
-              {verifiedItems.map((item) => {
-                  return (
-                    <Card key={item.id} item={item} user={user} />
-                  );
-              })}
-            </div>
-            { this.renderLoginMessage() }
-          </div>
-        );
+        if(verifiedItems.length > 0) {
+            return(
+              <div>
+                <div styleName="cards">
+                  {verifiedItems.map((item) => {
+                      return (
+                        <Card key={item.id} item={item} user={user} />
+                      );
+                  })}
+                </div>
+                { this.renderLoginMessage() }
+              </div>
+            );
+        }return <Loader />;
     }
 
     renderLoginMessage() {
@@ -101,6 +121,7 @@ class Home extends React.Component<OwnProps & Props, State> {
         return (
             <div styleName="wrapper">
               { <Nav user={user} /> }
+              { this.renderBanner() }
               { this.renderCards() }
             </div>
         );

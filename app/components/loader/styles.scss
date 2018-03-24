@@ -1,0 +1,82 @@
+@import '../../routes/layout/colors';
+
+.container{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	width: 100%;
+	min-height: 200px;
+	height: 100%;
+}
+$shadow: rgba(0,0,0,.1);
+$ball-size: 25px; // Change size here
+
+@mixin keyframes($animation-name) {
+	@-webkit-keyframes #{$animation-name} {
+		@content;
+	}
+	@-moz-keyframes #{$animation-name} {
+		@content;
+	}
+	@-ms-keyframes #{$animation-name} {
+		@content;
+	}
+	@-o-keyframes #{$animation-name} {
+		@content;
+	}
+	@keyframes #{$animation-name} {
+		@content;
+	}
+}
+
+@mixin animation($str) {
+  -webkit-animation: #{$str};
+  -moz-animation: #{$str};
+  -ms-animation: #{$str};
+  -o-animation: #{$str};
+  animation: #{$str};
+}
+
+.ball{
+	display: inline-block;
+	width: $ball-size;
+	height: $ball-size;
+	border-radius: 50%;
+	z-index: 100;
+	mix-blend-mode: hard-light; // change blend mode here
+	background: $light-primary;
+	&:after{ // This is the shadow
+		content: '';
+		display: block;
+		background-color: $shadow;
+		width: $ball-size;
+		height: $ball-size / 10 ;
+		position: relative;
+		border-radius: 50%;
+		z-index: -100;
+		margin-top:  $ball-size / 6 +  $ball-size  ;
+		box-shadow: 0 0 20px 10px $shadow;
+  }
+	// Animation Section
+	bottom: 0;
+	@include animation('pass 3s 1');
+	animation-iteration-count:infinite;
+	animation-timing-function: cubic-bezier(.8,0,.2,1);
+}
+
+$first: $ball-size / 6 ;
+$second: -$ball-size - $ball-size / 6;
+$third: $ball-size / 6 ;
+
+@include keyframes(pass) {
+   0% {
+		margin: 0 $first;
+  }
+  50% {
+		margin: 0px $second;
+	}
+  100% {
+		margin: 0 $third;
+  }
+}

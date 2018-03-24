@@ -4058,6 +4058,10 @@ react-dom@^15.0.2:
     object-assign "^4.1.0"
     prop-types "^15.5.10"
 
+react-favicon@^0.0.13:
+  version "0.0.13"
+  resolved "https://registry.yarnpkg.com/react-favicon/-/react-favicon-0.0.13.tgz#5fec4f3f2a7cdb39eb253d8bb2d0ceb6194a00bf"
+
 react-ga@^2.4.1:
   version "2.4.1"
   resolved "https://registry.yarnpkg.com/react-ga/-/react-ga-2.4.1.tgz#dfbd5f028ed39a07067f7a8bf57dc0d240000767"

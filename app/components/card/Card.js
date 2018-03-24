@@ -38,7 +38,7 @@ class Card extends React.Component<> {
 
     hasLikedStory() {
         const { item, user } = this.props;
-        return item.likes.users && Object.values(item.likes.users).includes(user.uid);
+        return user && item.likes.users && Object.values(item.likes.users).includes(user.uid);
     }
 
     // Render Partials
@@ -74,8 +74,8 @@ class Card extends React.Component<> {
 
         return (
             <div styleName="container" key={item.id}>
-              <div styleName="prompt">{item.prompt}</div>
-              <div styleName="body">{item.body}</div>
+              <h2 styleName="prompt">{item.prompt}</h2>
+              <p styleName="body">{item.body}</p>
               <div styleName="author">-{initials}</div>
               { this.renderRemoveButton() }
               { this.renderLikes() }
