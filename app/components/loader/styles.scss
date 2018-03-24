@@ -10,7 +10,7 @@
 	height: 100%;
 }
 $shadow: rgba(0,0,0,.1);
-$ball-size: 25px; // Change size here
+$ball-size: 32px; // Change size here
 
 @mixin keyframes($animation-name) {
 	@-webkit-keyframes #{$animation-name} {
@@ -44,9 +44,9 @@ $ball-size: 25px; // Change size here
 	height: $ball-size;
 	border-radius: 50%;
 	z-index: 100;
-	mix-blend-mode: hard-light; // change blend mode here
+	mix-blend-mode: hard-light;
 	background: $light-primary;
-	&:after{ // This is the shadow
+	&:after{
 		content: '';
 		display: block;
 		background-color: $shadow;
@@ -56,9 +56,8 @@ $ball-size: 25px; // Change size here
 		border-radius: 50%;
 		z-index: -100;
 		margin-top:  $ball-size / 6 +  $ball-size  ;
-		box-shadow: 0 0 20px 10px $shadow;
+		box-shadow: 0 0 10px 5px $shadow;
   }
-	// Animation Section
 	bottom: 0;
 	@include animation('pass 3s 1');
 	animation-iteration-count:infinite;

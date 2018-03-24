@@ -63,6 +63,16 @@ class Popup extends React.Component<OwnProps & Props> {
         this.setState({formOpen: !this.state.formOpen});
     }
 
+    isDisabled() {
+        const { body } = this.state;
+
+        let isDisabled = false;
+        if(body.length < 1 || (new RegExp('([a-zA-Z0-9]+://)?([a-zA-Z0-9_]+:[a-zA-Z0-9_]+@)?([a-zA-Z0-9.-]+\\.[A-Za-z]{2,4})(:[0-9]+)?(/.*)?').test(body))) {
+            isDisabled = true;
+        }
+        return isDisabled;
+    }
+
 
     render() {
         const { body } = this.state;
@@ -78,7 +88,7 @@ class Popup extends React.Component<OwnProps & Props> {
                     <h1 styleName="popup-header">Today, I am grateful for...</h1>
                     <textarea styleName="input" type="text" name="body" placeholder="What are you grateful for?" onChange={this.handleChange} value={body} maxLength="750" />
                     <div styleName={storyLength === 750 ? 'red' : ''}>{storyLength} / 750</div>
-                    <Button text="Submit story" grey disabled={storyLength === 0} onClick={() => this.toggleForm()} />
+                    <Button text="Submit story" grey disabled={this.isDisabled()} onClick={() => this.toggleForm()} />
                   </form>
                 </div>
               </div>
