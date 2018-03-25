@@ -4,6 +4,7 @@ import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import firebase from '../firebase/Firebase';
 import classNames from 'classnames';
+import ReactGA from 'react-ga';
 
 class Card extends React.Component<> {
     static propTypes = {
@@ -15,6 +16,10 @@ class Card extends React.Component<> {
     removeStory(itemId) {
         const itemRef = firebase.database().ref(`/items/${itemId}`);
         itemRef.remove();
+        ReactGA.event({
+            category: 'Story',
+            action: 'Removed'
+        });
     }
 
     likeStory(item) {
@@ -34,6 +39,10 @@ class Card extends React.Component<> {
                 user.uid
             );
         }
+        ReactGA.event({
+            category: 'Story',
+            action: 'Liked'
+        });
     }
 
     hasLikedStory() {

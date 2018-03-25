@@ -5,6 +5,7 @@ import CSSModules from 'react-css-modules';
 import classNames from 'classnames';
 import firebase from '../firebase/Firebase';
 import Button from '../button/Button';
+import ReactGA from 'react-ga';
 
 export type Props = {}
 
@@ -56,6 +57,10 @@ class Popup extends React.Component<OwnProps & Props> {
         this.setState({
             body: '',
             author: ''
+        });
+        ReactGA.event({
+            category: 'Story',
+            action: 'Published'
         });
     }
 
