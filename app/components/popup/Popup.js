@@ -7,15 +7,14 @@ import firebase from '../firebase/Firebase';
 import Button from '../button/Button';
 import ReactGA from 'react-ga';
 
-export type Props = {}
-
-export type OwnProps = {
-  user: Object
-}
-
-class Popup extends React.Component<OwnProps & Props> {
+class Popup extends React.Component<> {
     static propTypes = {
         user: PropTypes.object,
+        prompt: PropTypes.string,
+    }
+
+    static defaultProps = {
+        prompt: 'What are you happy about today?'
     }
 
     constructor() {
@@ -37,23 +36,24 @@ class Popup extends React.Component<OwnProps & Props> {
 
     handleSubmit(e) {
         e.preventDefault();
-        const { user } = this.props;
+        const { user, prompt } = this.props;
         const { body } = this.state;
-        const itemsRef = firebase.database().ref('items');
+        const trimmedPrompt = this.getTrimmedPrompt();
+        const storiesRef = firebase.database().ref(`stories/${trimmedPrompt}`);
         const item = {
             author: {
                 id: user.uid,
                 name: user.displayName || user.email,
             },
             body: body,
-            prompt: 'What are you grateful for?',
+            prompt: prompt,
             date: Date(),
             likes: {
                 count: 0,
                 users: null
             }
         };
-        itemsRef.push(item);
+        storiesRef.push(item);
         this.setState({
             body: '',
             author: ''
@@ -76,6 +76,25 @@ class Popup extends React.Component<OwnProps & Props> {
             isDisabled = true;
         }
         return isDisabled;
+    }
+
+    getDate() {
+        let today = new Date();
+        let dd = today.getDate();
+        let mm = today.getMonth() + 1;
+        const yyyy = today.getFullYear();
+
+        if(dd < 10) { dd = '0' + dd; }
+        if(mm < 10) { mm = '0' + mm; }
+
+        today = dd + mm + yyyy;
+        return today;
+    }
+
+    getTrimmedPrompt() {
+        const { prompt } = this.props;
+        const trimmedPrompt = prompt.replace(/\s/g, '').replace(/[^a-zA-Z ]/g, '').toLowerCase();
+        return trimmedPrompt;
     }
 
 

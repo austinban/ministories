@@ -13,7 +13,7 @@ export type OwnProps = {}
 export type State = {
   body: string,
   author: string,
-  items: Array<string>,
+  stories: Array<string>,
   formOpen: boolean
 }
 
@@ -21,7 +21,7 @@ class Home extends React.Component<OwnProps & Props, State> {
     constructor() {
         super();
         this.state = {
-            items: [],
+            stories: [],
             user: null
         };
     }
@@ -33,39 +33,47 @@ class Home extends React.Component<OwnProps & Props, State> {
                 this.setState({ user });
             }
         });
+        this.getStories();
+    }
 
-        const itemsRef = firebase.database().ref('items');
-        itemsRef.on('value', (snapshot) => {
-            const items = snapshot.val();
+    // functions
+    getStories() {
+        const storiesRef = firebase.database().ref('stories');
+        storiesRef.on('value', (snapshot) => {
+            const dates = snapshot.val();
             const newState = [];
-            for (const item in items) {
-                if(item) {
-                    newState.push({
-                        id: item,
-                        author: {
-                            id: items[item].author.id,
-                            name: items[item].author.name,
-                        },
-                        body: items[item].body,
-                        prompt: items[item].prompt,
-                        date: items[item].date,
-                        likes: {
-                            count: items[item].likes.count,
-                            users: items[item].likes.users
+
+            for (const date in dates) {
+                if(date) {
+                    const dateRef = firebase.database().ref(`stories/${date}`);
+                    dateRef.on('value', (snapshot2) => {
+                        const stories = snapshot2.val();
+                        for (const story in stories) {
+                            if(story) {
+                                newState.push({
+                                    id: story,
+                                    author: {
+                                        id: stories[story].author.id,
+                                        name: stories[story].author.name,
+                                    },
+                                    body: stories[story].body,
+                                    prompt: stories[story].prompt,
+                                    date: stories[story].date,
+                                    likes: {
+                                        count: stories[story].likes.count,
+                                        users: stories[story].likes.users
+                                    }
+                                });
+                            }
                         }
                     });
                 }
             }
+
             this.setState({
-                items: newState.reverse()
+                stories: newState.reverse()
             });
         });
-    }
-
-    componentDidUpdate(prevProps, prevState) {
-        if(prevState.user !== this.state.user) {
-            // console.log('updates')
-        }
     }
 
     // Render partials
@@ -87,15 +95,16 @@ class Home extends React.Component<OwnProps & Props, State> {
     }
 
     renderCards() {
-        const { user, items } = this.state;
-        const verifiedItems = user ? items : items.slice(0, 12);
-        if(verifiedItems.length > 0) {
+        const { user, stories } = this.state;
+        const verifiedstories = user ? stories : stories.slice(0, 12);
+        console.log('stories', stories);
+        if(verifiedstories.length > 0) {
             return(
               <div>
                 <div styleName="cards">
-                  {verifiedItems.map((item) => {
+                  {verifiedstories.map((story) => {
                       return (
-                        <Card key={item.id} item={item} user={user} />
+                        <Card key={story.id} item={story} user={user} />
                       );
                   })}
                 </div>
@@ -126,7 +135,6 @@ class Home extends React.Component<OwnProps & Props, State> {
             </div>
         );
     }
-
 }
 
 export default CSSModules(Home, styles, {allowMultiple: true});
