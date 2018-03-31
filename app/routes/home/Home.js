@@ -6,23 +6,14 @@ import Card from '../../components/card/Card';
 import Nav from '../../components/nav/Nav';
 import Loader from '../../components/loader/Loader';
 
-export type Props = {}
 
-export type OwnProps = {}
-
-export type State = {
-  body: string,
-  author: string,
-  stories: Array<string>,
-  formOpen: boolean
-}
-
-class Home extends React.Component<OwnProps & Props, State> {
+class Home extends React.Component<> {
     constructor() {
         super();
         this.state = {
             stories: [],
-            user: null
+            user: null,
+            dailyPrompt: ''
         };
     }
 
@@ -33,10 +24,35 @@ class Home extends React.Component<OwnProps & Props, State> {
                 this.setState({ user });
             }
         });
+        this.getPrompt();
         this.getStories();
     }
 
     // functions
+    getPrompt() {
+        const date = this.getDate();
+        if(date === '20180331') {
+            this.setState({dailyPrompt: 'Who is your favorite person?'});
+        }else if(date === '20180332') {
+            this.setState({dailyPrompt: 'Who is your enemy?'});
+        }else {
+            this.setState({dailyPrompt: 'Who do you hate?'});
+        }
+    }
+
+    getDate() {
+        let today = new Date();
+        let dd = today.getDate();
+        let mm = today.getMonth() + 1;
+        const yyyy = today.getFullYear();
+
+        if(dd < 10) { dd = '0' + dd; }
+        if(mm < 10) { mm = '0' + mm; }
+
+        today = yyyy + mm + dd;
+        return today;
+    }
+
     getStories() {
         const storiesRef = firebase.database().ref('stories');
         storiesRef.on('value', (snapshot) => {
@@ -78,12 +94,12 @@ class Home extends React.Component<OwnProps & Props, State> {
 
     // Render partials
     renderBanner() {
-        const { user } = this.state;
+        const { user, dailyPrompt } = this.state;
         if(user) {
             return(
               <div styleName="banner">
-                <h1 styleName="banner-text">Welcome back, {user.displayName}!</h1>
-                <p styleName="banner-subtext">I'm so glad you're here! </p>
+                <h1 styleName="banner-text">{dailyPrompt}</h1>
+                <p styleName="banner-subtext">Welcome back, {user.displayName}!</p>
               </div>
             );
         }return(
@@ -97,7 +113,6 @@ class Home extends React.Component<OwnProps & Props, State> {
     renderCards() {
         const { user, stories } = this.state;
         const verifiedstories = user ? stories : stories.slice(0, 12);
-        console.log('stories', stories);
         if(verifiedstories.length > 0) {
             return(
               <div>
@@ -126,10 +141,11 @@ class Home extends React.Component<OwnProps & Props, State> {
 
     // Render
     render() {
-        const { user } = this.state;
+        const { user, dailyPrompt } = this.state;
+
         return (
             <div styleName="wrapper">
-              { <Nav user={user} /> }
+              { <Nav user={user} prompt={dailyPrompt} /> }
               { this.renderBanner() }
               { this.renderCards() }
             </div>

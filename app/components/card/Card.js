@@ -13,8 +13,11 @@ class Card extends React.Component<> {
     }
 
     // Functions
-    removeStory(itemId) {
-        const itemRef = firebase.database().ref(`/items/${itemId}`);
+    removeStory() {
+        const {item} = this.props;
+        const itemId = item.id;
+        const date = item.date;
+        const itemRef = firebase.database().ref(`/stories/${date}/${itemId}`);
         itemRef.remove();
         ReactGA.event({
             category: 'Story',
@@ -22,19 +25,20 @@ class Card extends React.Component<> {
         });
     }
 
-    likeStory(item) {
+    likeStory() {
+        const { user, item } = this.props;
         const itemId = item.id;
-        const { user } = this.props;
+        const date = item.date;
 
         // Can only like if you've logged in and you haven't liked it before
         const canLike = user && (!item.likes.users || !Object.values(item.likes.users).includes(user.uid));
 
         if(canLike) {
-            const itemLikeRef = firebase.database().ref(`/items/${itemId}/likes/count`);
+            const itemLikeRef = firebase.database().ref(`/stories/${date}/${itemId}/likes/count`);
             itemLikeRef.transaction(function like(currentLikes) {
                 return currentLikes + 1;
             });
-            const itemLikersRef = firebase.database().ref(`/items/${itemId}/likes/users`);
+            const itemLikersRef = firebase.database().ref(`/stories/${date}/${itemId}/likes/users`);
             itemLikersRef.push(
                 user.uid
             );
@@ -55,7 +59,7 @@ class Card extends React.Component<> {
         const { item, user } = this.props;
         if(user && item.author.id === user.uid) {
             return(
-                <div styleName="remove" onClick={() => this.removeStory(item.id)}>X</div>
+                <div styleName="remove" onClick={() => this.removeStory()}>X</div>
             );
         }
         return null;
@@ -65,7 +69,7 @@ class Card extends React.Component<> {
         const { item } = this.props;
         const likeStyles = classNames('like', this.hasLikedStory() ? 'liked' : '');
         return(
-            <div styleName={likeStyles} onClick={() => this.likeStory(item)}>{item.likes.count >= 0 ? item.likes.count : 0}</div>
+            <div styleName={likeStyles} onClick={() => this.likeStory()}>{item.likes.count >= 0 ? item.likes.count : 0}</div>
         );
     }
 

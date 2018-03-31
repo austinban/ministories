@@ -38,8 +38,8 @@ class Popup extends React.Component<> {
         e.preventDefault();
         const { user, prompt } = this.props;
         const { body } = this.state;
-        const trimmedPrompt = this.getTrimmedPrompt();
-        const storiesRef = firebase.database().ref(`stories/${trimmedPrompt}`);
+        const date = this.getDate();
+        const storiesRef = firebase.database().ref(`stories/${date}`);
         const item = {
             author: {
                 id: user.uid,
@@ -47,7 +47,7 @@ class Popup extends React.Component<> {
             },
             body: body,
             prompt: prompt,
-            date: Date(),
+            date: date,
             likes: {
                 count: 0,
                 users: null
@@ -87,19 +87,13 @@ class Popup extends React.Component<> {
         if(dd < 10) { dd = '0' + dd; }
         if(mm < 10) { mm = '0' + mm; }
 
-        today = dd + mm + yyyy;
+        today = yyyy + mm + dd;
         return today;
     }
 
-    getTrimmedPrompt() {
-        const { prompt } = this.props;
-        const trimmedPrompt = prompt.replace(/\s/g, '').replace(/[^a-zA-Z ]/g, '').toLowerCase();
-        return trimmedPrompt;
-    }
-
-
     render() {
         const { body } = this.state;
+        const { prompt } = this.props;
         const popupClasses = classNames('popup-wrapper', this.state.formOpen ? '' : 'hidden');
         const storyLength = body.length;
         return(
@@ -109,7 +103,7 @@ class Popup extends React.Component<> {
                 <div styleName="popup">
                   <div styleName="close-icon" onClick={() => this.toggleForm()}>X</div>
                   <form styleName="form" onSubmit={this.handleSubmit}>
-                    <h1 styleName="popup-header">Today, I am grateful for...</h1>
+                    <h1 styleName="popup-header">{prompt}</h1>
                     <textarea styleName="input" type="text" name="body" placeholder="What are you grateful for?" onChange={this.handleChange} value={body} maxLength="750" />
                     <div styleName={storyLength === 750 ? 'red' : ''}>{storyLength} / 750</div>
                     <Button text="Submit story" grey disabled={this.isDisabled()} onClick={() => this.toggleForm()} />
