@@ -4,8 +4,9 @@ import CSSModules from 'react-css-modules';
 import firebase, { auth } from '../../components/firebase/Firebase';
 import Card from '../../components/card/Card';
 import Nav from '../../components/nav/Nav';
+import Footer from '../../components/footer/Footer';
+import StoryForm from '../../components/storyForm/StoryForm';
 import Loader from '../../components/loader/Loader';
-
 
 class Home extends React.Component<> {
     constructor() {
@@ -31,12 +32,16 @@ class Home extends React.Component<> {
     // functions
     getPrompt() {
         const date = this.getDate();
-        if(date === '20180331') {
-            this.setState({dailyPrompt: 'Who is your favorite person?'});
-        }else if(date === '20180332') {
-            this.setState({dailyPrompt: 'Who is your enemy?'});
+        if(date === '20180401') {
+            this.setState({dailyPrompt: 'What is the most important book you have read?'});
+        }else if(date === '20180402') {
+            this.setState({dailyPrompt: 'What was the last movie to make you cry?'});
+        }else if(date === '20180403') {
+            this.setState({dailyPrompt: 'Who have you been avoiding?'});
+        }else if(date === '20180404') {
+            this.setState({dailyPrompt: 'Tell me about a time you felt complete.'});
         }else {
-            this.setState({dailyPrompt: 'Who do you hate?'});
+            this.setState({dailyPrompt: 'What are you grateful for?'});
         }
     }
 
@@ -117,6 +122,7 @@ class Home extends React.Component<> {
             return(
               <div>
                 <div styleName="cards">
+                  { this.renderStoryForm() }
                   {verifiedstories.map((story) => {
                       return (
                         <Card key={story.id} item={story} user={user} />
@@ -127,6 +133,15 @@ class Home extends React.Component<> {
               </div>
             );
         }return <Loader />;
+    }
+
+    renderStoryForm() {
+        const { user, dailyPrompt } = this.state;
+        if(user) {
+            return(
+              <StoryForm user={user} prompt={dailyPrompt} />
+            );
+        }return(null);
     }
 
     renderLoginMessage() {
@@ -145,9 +160,10 @@ class Home extends React.Component<> {
 
         return (
             <div styleName="wrapper">
-              { <Nav user={user} prompt={dailyPrompt} /> }
+              <Nav user={user} prompt={dailyPrompt} />
               { this.renderBanner() }
               { this.renderCards() }
+              <Footer user={user} />
             </div>
         );
     }

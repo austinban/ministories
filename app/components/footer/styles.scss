@@ -1,0 +1,10 @@
+@import '../../routes/layout/colors';
+
+.container {
+	padding: 16px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	flex-wrap: wrap;
+	background: $grey;
+}
