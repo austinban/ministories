@@ -25,7 +25,7 @@ class Nav extends React.Component<OwnProps & Props> {
               <div styleName="options">
                 <Popup user={user} prompt={prompt} />
                 <LoginOrSignup user={user} />
-                <img styleName="profileImg" src={this.props.user.photoURL} />
+                { this.renderImg() }
               </div>
             );
         }
@@ -36,7 +36,8 @@ class Nav extends React.Component<OwnProps & Props> {
 
     renderImg() {
         const { user } = this.props;
-        if(user) {
+        console.log('user.photoURL', user.photoURL);
+        if(user.photoURL) {
             return(
               <img styleName="profileImg" src={this.props.user.photoURL} />
             );

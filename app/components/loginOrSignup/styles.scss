@@ -21,7 +21,7 @@
 }
 
 .popup{
-	width: 600px;
+	width: 400px;
 	max-width: 100%;
 	position: relative;
 	background: $light-primary;
@@ -34,6 +34,7 @@
 	align-items: center;
 	justify-content: center;
 	text-align: center;
+	box-shadow: 8px 8px 12px rgba(0,0,0,.1);
 }
 
 @keyframes dropIn {

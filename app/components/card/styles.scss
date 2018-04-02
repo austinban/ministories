@@ -55,10 +55,37 @@
 	bottom: 12px;
 	right: 12px;
 	color: $light-primary;
-	cursor: url("https://s3.amazonaws.com/ministoriessite/like.png") 12 12, pointer;
+	cursor: pointer;
 	font-weight: 700;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 	&.liked{
 		color: $highlight;
 		cursor: default;
+		&:before{
+			content: '';
+			border-radius: 50%;
+			background: $highlight;
+			position: absolute;
+			animation: pop .4s;
+			animation-timing-function: ease-out;
+			width: 40px;
+			height: 40px;
+			top: -12px;
+			left: -14px;
+			opacity: 0;
+		}
+	}
+}
+
+@keyframes pop {
+	from{
+		opacity: 1;
+		transform: scale(0);
+	}
+	to{
+		opacity: 0;
+		transform: scale(1);
 	}
 }
