@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styles from './styles.scss';
 import CSSModules from 'react-css-modules';
-import LoginButton from '../loginButton/LoginButton';
+import LoginOrSignup from '../loginOrSignup/LoginOrSignup';
 
 export type Props = {}
 
@@ -21,7 +21,7 @@ class Footer extends React.Component<OwnProps & Props> {
 
         return (
             <div styleName="container">
-              <LoginButton user={user} />
+              <LoginOrSignup user={user} />
             </div>
         );
     }

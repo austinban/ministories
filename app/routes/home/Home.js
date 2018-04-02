@@ -33,7 +33,7 @@ class Home extends React.Component<> {
     getPrompt() {
         const date = this.getDate();
         if(date === '20180401') {
-            this.setState({dailyPrompt: 'What is the most important book you have read?'});
+            this.setState({dailyPrompt: 'What book should someone read every year?'});
         }else if(date === '20180402') {
             this.setState({dailyPrompt: 'What was the last movie to make you cry?'});
         }else if(date === '20180403') {

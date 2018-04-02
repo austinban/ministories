@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import styles from './styles.scss';
 import CSSModules from 'react-css-modules';
 import Button from '../button/Button';
-import { auth, provider } from '../../components/firebase/Firebase';
+import { auth, provider } from '../firebase/Firebase';
 
 export type Props = {}
 
@@ -17,7 +17,7 @@ class LoginButton extends React.Component<OwnProps & Props> {
     }
     constructor() {
         super();
-        this.login = this.login.bind(this);
+        this.gmailLogin = this.gmailLogin.bind(this);
         this.logout = this.logout.bind(this);
     }
 
@@ -31,7 +31,7 @@ class LoginButton extends React.Component<OwnProps & Props> {
         location.reload();
     }
 
-    login() {
+    gmailLogin() {
         auth.signInWithPopup(provider)
           .then((result) => {
               this.setState({
@@ -40,16 +40,46 @@ class LoginButton extends React.Component<OwnProps & Props> {
           });
     }
 
+    emailLogin() {
+        const email = 'austin.ban@pop.belmont.edu';
+        const password = '12345678';
+        auth.signInWithEmailAndPassword(email, password).then((result) => {
+            this.setState({user: result});
+        });
+    }
+
+    emailSignUp() {
+        const email = 'austin.ban@pop.belmont.edu';
+        const password = '12345678';
+        auth.createUserWithEmailAndPassword(email, password).then((result) => {
+            this.setState({
+                result
+            });
+            this.state.user.updateProfile({
+                displayName: 'Jane Q. User',
+            }).then(function() {
+                // Update successful.
+            }).catch(function(error) {
+                // An error happened.
+                console.log(error);
+            });
+        });
+    }
+
     render() {
         const { user } = this.props;
 
         if(user) {
             return(
-              <Button text="Log out" onClick={this.logout} />
+              <Button text="Log out" onClick={() => this.logout()} />
             );
         }
         return(
-          <Button text="Log in" onClick={this.login} />
+          <div>
+            <Button text="Log in with google" onClick={() => this.gmailLogin()} />
+            <Button text="Sign up with email" onClick={() => this.emailSignUp()} />
+            <Button text="Login with email" onClick={() => this.emailLogin()} />
+          </div>
         );
     }
 }
