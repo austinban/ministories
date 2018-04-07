@@ -21,14 +21,16 @@
 }
 
 .popup{
-	width: 600px;
+	min-width: 600px;
 	max-width: 100%;
 	position: relative;
-	background: $light-primary;
+	background: $off-white;
 	padding: 32px;
 	border-radius: 6px;
 	animation: dropIn .4s;
 	animation-timing-function: cubic-bezier(.4,.01,.25,1.25);
+	overflow: auto;
+	max-height: 100vh;
 }
 
 @keyframes dropIn {

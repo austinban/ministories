@@ -6,6 +6,7 @@ import classNames from 'classnames';
 import firebase from '../firebase/Firebase';
 import Button from '../button/Button';
 import ReactGA from 'react-ga';
+import { getCurrentDate } from '../../lib/dates';
 
 class Popup extends React.Component<> {
     static propTypes = {
@@ -38,7 +39,7 @@ class Popup extends React.Component<> {
         e.preventDefault();
         const { user, prompt } = this.props;
         const { body } = this.state;
-        const date = this.getDate();
+        const date = getCurrentDate();
         const storiesRef = firebase.database().ref(`stories/${date}`);
         const item = {
             author: {
@@ -76,19 +77,6 @@ class Popup extends React.Component<> {
             isDisabled = true;
         }
         return isDisabled;
-    }
-
-    getDate() {
-        let today = new Date();
-        let dd = today.getDate();
-        let mm = today.getMonth() + 1;
-        const yyyy = today.getFullYear();
-
-        if(dd < 10) { dd = '0' + dd; }
-        if(mm < 10) { mm = '0' + mm; }
-
-        today = yyyy + mm + dd;
-        return today;
     }
 
     render() {

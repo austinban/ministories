@@ -20,7 +20,7 @@ class LoginOrSignup extends React.Component<> {
             firstName: '',
             lastName: '',
             formOpen: false,
-            alreadyHasAccount: false,
+            alreadyHasAccount: true,
             errorMessage: ''
         };
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -28,6 +28,7 @@ class LoginOrSignup extends React.Component<> {
         this.gmailLogin = this.gmailLogin.bind(this);
     }
 
+    // Functions
     handleChange(e) {
         this.setState({
             [e.target.name]: e.target.value
@@ -40,6 +41,16 @@ class LoginOrSignup extends React.Component<> {
 
     toggleHasAccount() {
         this.setState({alreadyHasAccount: !this.state.alreadyHasAccount});
+    }
+
+    clickLogIn() {
+        this.toggleForm();
+        this.setState({alreadyHasAccount: true});
+    }
+
+    clickSignup() {
+        this.toggleForm();
+        this.setState({alreadyHasAccount: false});
     }
 
     isDisabled() {
@@ -128,22 +139,29 @@ class LoginOrSignup extends React.Component<> {
         });
     }
 
+    renderHeader() {
+        const {alreadyHasAccount} = this.state;
+        if(alreadyHasAccount) {
+            return <h2>Log in</h2>;
+        }
+        return <h2>Sign up</h2>;
+    }
+
+    // Partials
     renderForm() {
         const { email, password, firstName, lastName, alreadyHasAccount} = this.state;
         if(alreadyHasAccount) {
             return(
               <form onSubmit={this.handleSubmit}>
-                <h2>Log in</h2>
                 <input styleName="input" type="text" name="email" placeholder="email" onChange={this.handleChange} value={email} />
                 <input styleName="input" type="password" name="password" placeholder="password" onChange={this.handleChange} value={password} />
-                <Button text="Login" grey disabled={this.isDisabled()} />
-                <div onClick={() => this.toggleHasAccount()}>Don't have an account?</div>
+                <Button text="Sign in" grey disabled={this.isDisabled()} />
+                <div styleName="toggle-text" onClick={() => this.toggleHasAccount()}>Don't have an account?</div>
               </form>
             );
         }
         return(
           <form onSubmit={this.handleSubmit}>
-            <h2>Sign up</h2>
             <div styleName="name-wrapper">
               <input styleName="input" type="text" name="firstName" placeholder="First name" onChange={this.handleChange} value={firstName} />
               <input styleName="input" type="text" name="lastName" placeholder="Last name" onChange={this.handleChange} value={lastName} />
@@ -151,7 +169,7 @@ class LoginOrSignup extends React.Component<> {
             <input styleName="input" type="text" name="email" placeholder="email" onChange={this.handleChange} value={email} />
             <input styleName="input" type="password" name="password" placeholder="password" onChange={this.handleChange} value={password} />
             <Button text="Signup" grey disabled={this.isDisabled()} />
-            <div onClick={() => this.toggleHasAccount()}>Already have an account?</div>
+            <div styleName="toggle-text" onClick={() => this.toggleHasAccount()}>Already have an account?</div>
           </form>
         );
     }
@@ -159,13 +177,17 @@ class LoginOrSignup extends React.Component<> {
     renderButton() {
         const { user } = this.props;
         if(user) {
-            return(
-                <Button text="logout" onClick={() => this.logout()}/>
-            );
+            return <Button text="logout" onClick={() => this.logout()}/>;
         }
-        return <Button text="Login or signup" onClick={() => this.toggleForm()}/>;
+        return (
+          <div>
+            <Button text="Log in" onClick={() => this.clickLogIn()}/>
+            <Button text="Sign up" onClick={() => this.clickSignup()}/>
+          </div>
+        );
     }
 
+    // Render
     render() {
         const popupClasses = classNames('popup-wrapper', this.state.formOpen ? '' : 'hidden');
         return(
@@ -174,8 +196,12 @@ class LoginOrSignup extends React.Component<> {
             <div styleName={popupClasses}>
               <div styleName="popup">
                 <div styleName="close-icon" onClick={() => this.toggleForm()}>X</div>
+                { this.renderHeader() }
+                <div styleName="google-login" onClick={() => this.gmailLogin()}>
+                  <img src="https://s3.amazonaws.com/ministoriessite/btn_google_light_normal_ios.svg"/>
+                  <div styleName="google-text">Sign in with google</div>
+                </div>
                 { this.renderForm() }
-                <Button grey text="Log in with google" onClick={() => this.gmailLogin()} />
               </div>
             </div>
           </div>

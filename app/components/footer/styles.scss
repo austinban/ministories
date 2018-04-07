@@ -3,8 +3,18 @@
 .container {
 	padding: 16px;
 	display: flex;
-	justify-content: space-between;
+	justify-content: center;
 	align-items: center;
+	flex-direction: column;
 	flex-wrap: wrap;
-	background: $grey;
+	border-top: 1px solid $grey;
+	box-shadow: 0 -4px 6px rgba(0,0,0,.08);
+}
+
+.text{
+	color: $grey;
+	margin: 8px 16px 0 0;
+	font-size: 14px;
+	text-transform: uppercase;
+	letter-spacing: 1px;
 }

@@ -7,11 +7,13 @@ import Nav from '../../components/nav/Nav';
 import Footer from '../../components/footer/Footer';
 import StoryForm from '../../components/storyForm/StoryForm';
 import Loader from '../../components/loader/Loader';
+import { getCurrentDate } from '../../lib/dates';
 
 class Home extends React.Component<> {
     constructor() {
         super();
         this.state = {
+            dates: [],
             stories: [],
             user: null,
             dailyPrompt: ''
@@ -27,11 +29,12 @@ class Home extends React.Component<> {
         });
         this.getPrompt();
         this.getStories();
+        this.getStoryDates();
     }
 
     // functions
     getPrompt() {
-        const date = this.getDate();
+        const date = getCurrentDate();
         if(date === '20180401') {
             this.setState({dailyPrompt: 'What book should someone read every year?'});
         }else if(date === '20180402') {
@@ -45,19 +48,6 @@ class Home extends React.Component<> {
         }
     }
 
-    getDate() {
-        let today = new Date();
-        let dd = today.getDate();
-        let mm = today.getMonth() + 1;
-        const yyyy = today.getFullYear();
-
-        if(dd < 10) { dd = '0' + dd; }
-        if(mm < 10) { mm = '0' + mm; }
-
-        today = yyyy + mm + dd;
-        return today;
-    }
-
     getStories() {
         const storiesRef = firebase.database().ref('stories');
         storiesRef.on('value', (snapshot) => {
@@ -69,6 +59,7 @@ class Home extends React.Component<> {
                     const dateRef = firebase.database().ref(`stories/${date}`);
                     dateRef.on('value', (snapshot2) => {
                         const stories = snapshot2.val();
+
                         for (const story in stories) {
                             if(story) {
                                 newState.push({
@@ -90,9 +81,22 @@ class Home extends React.Component<> {
                     });
                 }
             }
+            this.setState({ stories: newState.reverse() });
+        });
+    }
+
+    getStoryDates() {
+        const storiesRef = firebase.database().ref('stories');
+        storiesRef.on('value', (snapshot) => {
+            const dates = snapshot.val();
+            const newState = [];
+
+            for (const date in dates) {
+                if(date) { newState.push(date); }
+            }
 
             this.setState({
-                stories: newState.reverse()
+                dates: newState.reverse()
             });
         });
     }
@@ -117,13 +121,12 @@ class Home extends React.Component<> {
 
     renderCards() {
         const { user, stories } = this.state;
-        const verifiedstories = user ? stories : stories.slice(0, 12);
-        if(verifiedstories.length > 0) {
+        if(stories.length > 0) {
             return(
               <div>
                 <div styleName="cards">
                   { this.renderStoryForm() }
-                  {verifiedstories.map((story) => {
+                  {stories.map((story) => {
                       return (
                         <Card key={story.id} item={story} user={user} />
                       );

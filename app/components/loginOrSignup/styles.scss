@@ -24,7 +24,7 @@
 	width: 400px;
 	max-width: 100%;
 	position: relative;
-	background: $light-primary;
+	background: $off-white;
 	padding: 32px;
 	border-radius: 6px;
 	animation: dropIn .4s;
@@ -73,11 +73,38 @@
 		outline: none;
 	}
 }
+
 .name-wrapper{
 	display: flex;
 	@media(max-width: 600px){
 		flex-direction: column;
 	}
+}
+
+.toggle-text{
+	cursor: pointer;
+	color: $light-primary;
+	&:hover{
+		text-decoration: underline;
+	}
+}
+
+.google-login{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-radius: 4px;
+	background: #fff;
+	color: rgba(0,0,0,.6);
+	cursor: pointer;
+	transition: all .2s;
+	&:hover{
+		box-shadow: -2px 2px 4px rgba(0,0,0,.1);
+	}
+}
+
+.google-text{
+	padding: 8px;
 }
 
 .submit{

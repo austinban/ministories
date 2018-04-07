@@ -22,6 +22,7 @@ class Footer extends React.Component<OwnProps & Props> {
         return (
             <div styleName="container">
               <LoginOrSignup user={user} />
+              <div styleName="text">© Ministories 2018</div>
             </div>
         );
     }
