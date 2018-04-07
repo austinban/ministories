@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styles from './styles.scss';
 import CSSModules from 'react-css-modules';
-import Popup from '../popup/Popup';
+import StoryPopup from '../storyPopup/StoryPopup';
 import LoginOrSignup from '../loginOrSignup/LoginOrSignup';
 export type Props = {}
 
@@ -23,7 +23,7 @@ class Nav extends React.Component<OwnProps & Props> {
         if(user) {
             return(
               <div styleName="options">
-                <Popup user={user} prompt={prompt} />
+                <StoryPopup user={user} prompt={prompt} />
                 <LoginOrSignup user={user} />
                 { this.renderImg() }
               </div>

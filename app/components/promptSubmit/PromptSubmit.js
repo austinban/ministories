@@ -5,21 +5,16 @@ import CSSModules from 'react-css-modules';
 import firebase from '../firebase/Firebase';
 import Button from '../button/Button';
 import ReactGA from 'react-ga';
-import { getCurrentDate } from '../../lib/dates';
 
-class StoryForm extends React.Component<> {
+class PromptSubmit extends React.Component<> {
     static propTypes = {
         user: PropTypes.object,
-        prompt: PropTypes.string,
-    }
-
-    static defaultProps = {
-        prompt: 'What are you happy about today?'
     }
 
     constructor() {
         super();
         this.state = {
+            date: '',
             body: '',
             submitted: false
         };
@@ -34,40 +29,28 @@ class StoryForm extends React.Component<> {
 
     handleSubmit = (e) => {
         e.preventDefault();
-        const { user, prompt } = this.props;
-        const { body } = this.state;
-        const date = getCurrentDate();
-        const storiesRef = firebase.database().ref(`stories/${date}`);
+        const { date, body } = this.state;
+        const storiesRef = firebase.database().ref(`prompts/${date}`);
         const item = {
-            author: {
-                id: user.uid,
-                name: user.displayName || user.email,
-            },
-            body: body,
-            prompt: prompt,
-            date: date,
-            likes: {
-                count: 0,
-                users: null
-            }
+            prompt: body
         };
         storiesRef.push(item);
         this.setState({
             body: '',
-            author: ''
+            date: ''
         });
         ReactGA.event({
-            category: 'Story',
-            action: 'Published'
+            category: 'Prompt',
+            action: 'Submitted'
         });
         this.setState({submitted: true});
     }
 
     isDisabled = () => {
-        const { body } = this.state;
+        const { body, date } = this.state;
 
         let isDisabled = false;
-        if(body.length < 1 || (new RegExp('([a-zA-Z0-9]+://)?([a-zA-Z0-9_]+:[a-zA-Z0-9_]+@)?([a-zA-Z0-9.-]+\\.[A-Za-z]{2,4})(:[0-9]+)?(/.*)?').test(body))) {
+        if(body.length < 1 || date.length < 1) {
             isDisabled = true;
         }
         return isDisabled;
@@ -79,21 +62,19 @@ class StoryForm extends React.Component<> {
 
     // Partials
     renderBody() {
-        const { body, submitted } = this.state;
-        const { prompt } = this.props;
-        const storyLength = body.length;
+        const { body, date, submitted } = this.state;
         if(submitted) {
             return(
                 <div styleName="confirmation">
-                  <h2>Thanks for your story!</h2>
+                  <h2>Thanks for your prompt!</h2>
                   <div styleName="link" onClick={() => this.toggleStoryForm()}>Tell another story</div>
                 </div>
             );
         }return(
             <form styleName="form" onSubmit={this.handleSubmit}>
-              <textarea styleName="input" type="text" name="body" placeholder={prompt} onChange={this.handleChange} value={body} maxLength="750" />
-              <div styleName={storyLength === 750 ? 'red' : ''}>{storyLength} / 750</div>
-              <Button text="Submit story" grey disabled={this.isDisabled()} />
+              <textarea styleName="input" type="text" name="date" placeholder={'Enter date here (yyyymmdd)'} onChange={this.handleChange} value={date} maxLength="750" />
+              <textarea styleName="textarea" type="text" name="body" placeholder={'Enter prompt here'} onChange={this.handleChange} value={body} maxLength="750" />
+              <Button text="Submit prompt" grey disabled={this.isDisabled()} />
             </form>
         );
     }
@@ -108,4 +89,4 @@ class StoryForm extends React.Component<> {
     }
 }
 
-export default CSSModules(StoryForm, styles, {allowMultiple: true});
+export default CSSModules(PromptSubmit, styles, {allowMultiple: true});

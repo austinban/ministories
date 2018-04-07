@@ -6,6 +6,7 @@ import Card from '../../components/card/Card';
 import Nav from '../../components/nav/Nav';
 import Footer from '../../components/footer/Footer';
 import StoryForm from '../../components/storyForm/StoryForm';
+import PromptSubmit from '../../components/promptSubmit/PromptSubmit';
 import Loader from '../../components/loader/Loader';
 import { getCurrentDate } from '../../lib/dates';
 
@@ -125,6 +126,7 @@ class Home extends React.Component<> {
             return(
               <div>
                 <div styleName="cards">
+                  { this.renderPromptSubmit() }
                   { this.renderStoryForm() }
                   {stories.map((story) => {
                       return (
@@ -143,6 +145,15 @@ class Home extends React.Component<> {
         if(user) {
             return(
               <StoryForm user={user} prompt={dailyPrompt} />
+            );
+        }return(null);
+    }
+
+    renderPromptSubmit() {
+        const { user } = this.state;
+        if(user) {
+            return(
+              <PromptSubmit user={user} />
             );
         }return(null);
     }

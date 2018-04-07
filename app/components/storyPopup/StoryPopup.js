@@ -8,7 +8,7 @@ import Button from '../button/Button';
 import ReactGA from 'react-ga';
 import { getCurrentDate } from '../../lib/dates';
 
-class Popup extends React.Component<> {
+class storyPopup extends React.Component<> {
     static propTypes = {
         user: PropTypes.object,
         prompt: PropTypes.string,
@@ -103,4 +103,4 @@ class Popup extends React.Component<> {
     }
 }
 
-export default CSSModules(Popup, styles, {allowMultiple: true});
+export default CSSModules(storyPopup, styles, {allowMultiple: true});
