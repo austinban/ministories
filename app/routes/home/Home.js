@@ -151,7 +151,7 @@ class Home extends React.Component<> {
 
     renderPromptSubmit() {
         const { user } = this.state;
-        if(user) {
+        if(user && user.uid === 'LKfp4UgdKLb8yhgxJKOa0l1ByjG3') {
             return(
               <PromptSubmit user={user} />
             );
